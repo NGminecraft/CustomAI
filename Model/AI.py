@@ -2,6 +2,7 @@ from Semantics.vocabulary import Vocabulary
 from Model.model import Transformer
 from constants import START_TOKEN, END_TOKEN, SINGLE_WORD_LOSS_FN, EMBEDDING_SIZE, SINGLE_WORD_FACTOR, MAX_OUTPUT_WORDS
 import torch
+import torch.nn as nn
 import logging
 import language_tool_python
 from language_tool_python.utils import classify_matches, TextStatus
@@ -93,18 +94,22 @@ class AI:
 
         loss.backward()
 
-    def train_full_output(self, input, input_tensors):
+    def train_full_output(self, input_words, input_tensors):
+        from constants import GRAMMATICAL_LOSS, NO_OUT_WEIGHT
+
         LOGGER.debug("Training full output")
         """BASIC STRUCTURE"""
 
         """CLEANING"""
         cleaned_sentence = []
-        for i in input:
+        for i in input_words:
             if i != START_TOKEN and i != END_TOKEN:
                 cleaned_sentence.append(i)
 
         if len(cleaned_sentence) == 0:
             LOGGER.error("The model outputed no real characters")
+#            loss = GRAMMATICAL_LOSS(input_tensors, self.vocabulary.embed_sentence(START_TOKEN + " " + END_TOKEN)) * NO_OUT_WEIGHT
+#            loss.backward()
             return
         
         cleaned_sentence = " ".join(cleaned_sentence)
@@ -112,7 +117,6 @@ class AI:
         LOGGER.debug(f"Output filtered to {cleaned_sentence}")
 
         """GRAMMAR"""
-        from constants import GRAMMATICAL_LOSS
 
         corrected = self.language_checker.correct(cleaned_sentence) # Generate grammatically correct version
         LOGGER.debug(f'AI output corrected to "{corrected}"')
@@ -120,15 +124,25 @@ class AI:
         # Update associations
         self.vocabulary.parse_sentence(corrected) # TODO: Give this parse a higher weight
 
-        grammar_loss = GRAMMATICAL_LOSS(input_tensors, self.vocabulary.embed_sentence(corrected))
+        corrected = START_TOKEN + " " + corrected + " " + END_TOKEN # Add start and end tokens
+
+        output_loss = GRAMMATICAL_LOSS(input_tensors, self.vocabulary.embed_sentence(corrected))
         
         # If the model output was really bad, raise loss by two
-        LOGGER.debug(f"Grammatical loss was {grammar_loss}")
+        LOGGER.debug(f"Grammatical loss was {output_loss.item()}")
 
-        from constants import GRAMMAR_WEIGHT
+        try:
+            user_loss = int(input(f"AI_OUTPUT: {cleaned_sentence}\nScale from  to 10? ")) - 10 * -1
+        except ValueError:
+            LOGGER.warning("Invalid input for user loss, defaulting to 0")
+            user_loss = 0
+
+        from constants import OUTPUT_WEIGHT, USER_LOSS
         total_loss = (
-            grammar_loss * GRAMMAR_WEIGHT
+            output_loss * OUTPUT_WEIGHT + 
+            user_loss * USER_LOSS
         )
+
         LOGGER.debug(f"Total loss was {total_loss.item()}")
         total_loss.backward()
 

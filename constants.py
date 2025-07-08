@@ -99,4 +99,10 @@ def GRAMMATICAL_LOSS(predicted: torch.Tensor, target: torch.Tensor) -> torch.Ten
     predicted_mean = predicted.mean(dim=0)
     target_mean = predicted.mean(dim=0)
     return _GRAMMAR_LOSS(predicted_mean.unsqueeze(0), target_mean.unsqueeze(0), torch.tensor([1]))
-GRAMMAR_WEIGHT = 1
+
+
+
+USER_LOSS = 5
+
+NO_OUT_WEIGHT = 0.3
+OUTPUT_WEIGHT = 3
