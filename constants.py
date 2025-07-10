@@ -87,6 +87,7 @@ MAX_OUTPUT_WORDS = 1000
 
 """TRAINING CONSTANTS"""
 DUPLICATE_WORD_EXPONENT = 3
+DUPLICATE_START = 5
 
 _SINGLE_WORD_LOSS_FN = nn.CosineEmbeddingLoss(margin=0.3)
 def SINGLE_WORD_LOSS_FN(output_embed, target_embed):

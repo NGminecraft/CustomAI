@@ -18,6 +18,7 @@ class AI:
         self.language_checker = language_tool_python.LanguageTool('en-US')
         self.last_word = None
         self.duplicate_count = 1
+        self.started = False
 
     def __call__(self, input_sentence, full=True, train=True) -> str:
         LOGGER.info(f"Recieved input {input_sentence}")
@@ -82,7 +83,7 @@ class AI:
             
 
     def train_word(self, input):
-        from constants import DUPLICATE_WORD_EXPONENT
+        from constants import DUPLICATE_WORD_EXPONENT, DUPLICATE_START
         
         word, _, tgt = self.vocabulary.get_embedding_from_output(input)
         loss = SINGLE_WORD_LOSS_FN(input, tgt.reshape(1, EMBEDDING_SIZE))
@@ -91,6 +92,11 @@ class AI:
         if word == self.last_word:
             loss *= self.duplicate_count
             self.duplicate_count *= DUPLICATE_WORD_EXPONENT
+        if word == START_TOKEN:
+            if not self.started:
+                self.started = True
+            else:
+                loss += DUPLICATE_START
 
         loss.backward()
 
@@ -108,8 +114,8 @@ class AI:
 
         if len(cleaned_sentence) == 0:
             LOGGER.error("The model outputed no real characters")
-#            loss = GRAMMATICAL_LOSS(input_tensors, self.vocabulary.embed_sentence(START_TOKEN + " " + END_TOKEN)) * NO_OUT_WEIGHT
-#            loss.backward()
+            loss = GRAMMATICAL_LOSS(input_tensors, self.vocabulary.embed_sentence(START_TOKEN + END_TOKEN)) * NO_OUT_WEIGHT
+            loss.backward()
             return
         
         cleaned_sentence = " ".join(cleaned_sentence)

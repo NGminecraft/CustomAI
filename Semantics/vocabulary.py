@@ -2,6 +2,7 @@ import torch
 from pyxdameraulevenshtein import normalized_damerau_levenshtein_distance as ndm
 from constants import WORD_RELATIONSHIP_WEIGHT, SAME_WORD_VALUE, LEARNING_FACTOR, DECAY_FN, POSITION_AWARE_WEIGHT_FN, WORD_SCALING_FACTOR, RELATIONSHIP_SCALING_FN, SECONDHAND_RELATIONSHIP_WEIGHT, EMBEDDING_SIZE, EMBEDDING_NORMALIZATION, PAD_IDX, SENTENCE_SPLITTER
 import logging
+from Semantics.POS.POS import POS
 
 LOGGER = logging.getLogger(__name__)
 
@@ -11,6 +12,7 @@ class Vocabulary:
         self.adjacency = torch.tensor([])
         self.vocab = {}
         self.words = set()
+        self.pos = POS()
 
     def add_word(self, word):
         LOGGER.debug(f"Adding word {word} to vocabulary")
