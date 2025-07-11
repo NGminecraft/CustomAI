@@ -1,0 +1,58 @@
+Basic sentence has a noun part, then a verb part
+The noun part is any noun, pronoun, proper noun, etc, as well as any modifiers to that noun (e.g. adjectives)
+The verb part is the same
+Some simple sentences may have another noun part at the end as a prepositional phrase
+
+NOUN: noun
+VERB: verb
+ADJ: adjective
+ADV: adverb
+INTJ: interjection
+PROPN: proper noun
+ADP: adposition
+AUX: auxiliary
+CCONJ: coordinating conjunction
+DET: determiner
+NUM: numerical
+PART: particle
+PRON: pronoun
+SCONJ: subordinate conjunction
+
+E.G.
+The cat slept peacefully on the couch
+[Noun part]   [verb part] [noun part]
+Subject         Verb        Preposition
+
+Noun part
+Can have
+    DET (determiner)
+    ADJ (adjective)
+    NUM (numerical)
+Must have
+    NOUN/PRON (pronoun)/PROPN (proper noun)
+
+Verb part
+Can have
+    AUX
+Must have
+    Verb
+
+(optional)
+Prepositional part
+Must have
+    ADP
+    NOUN
+
+
+Seperate elemnts
+Conjunctions (CCONJ, SCONJ)
+
+RULES
+    AUX precedes VERB
+    DET preceds NOUN
+    ADJ preceds NOUN
+    ADP preceds or procedes NOUN/PRON/PROPN (usually precedes, but rarely can follow)
+    CCONJ/SCONJ merge clauses, can't be alone
+    A single word sentence means that word is either a VERB or INTJ
+    Parts that cannot be repeated one after the other
+        VERB, PRON, CCONJ, SCONJ, AUX, ADP, NUM

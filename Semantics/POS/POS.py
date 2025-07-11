@@ -10,10 +10,12 @@ def init_pos_tags():
     dir = os.path.join(os.path.dirname(__file__), 'POS_tags')
     LOGGER.debug(f'Loading POS tags from {dir}')
     for file in os.listdir(dir):
-        if file.endswith('.json') and file.startswith('POS_'):
+        if file.endswith('.json') and file.startswith('POS_'): # Grabbing only POS jsons
             with open(os.path.join(dir, file), 'r') as f:
-                LOGGER.debug(f'Loading POS tag {file[4:-3]}')
-                pos_tags[file[4:-3]] = json.load(f)
+                data = json.load(f)
+                pos_tags[data["name"]] = data
+                LOGGER.debug(f'Loading POS tag {data["name"]}')
+
     if len(pos_tags) == 0:
         LOGGER.warning(f'No POS tags found in {dir}')
         return {}
