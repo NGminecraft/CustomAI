@@ -1,6 +1,10 @@
 {
     "name": "[<adv>]",
-    "rules": [
-        
-    ]
+    "rules": {
+        "prepend": ["[<pt_noun>]"],
+        "immediate prepend": ["[<verb>]", "[<adv>]"],
+        "append": ["[<pt_prop>]"],
+        "immediate append": ["[<verb>]", "[<adv>]"],
+        "part": "[<pt_verb>]"
+    }
 }

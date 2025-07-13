@@ -1,6 +1,9 @@
 {
     "name": "[<sconj>]",
-    "rules": [
-        
-    ]
+    "rules": {
+        "prepend": [],
+        "immediate prepend": [],
+        "append": [],
+        "immediate append": []
+    }
 }

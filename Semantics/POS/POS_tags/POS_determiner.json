@@ -1,6 +1,10 @@
 {
     "name": "[<det>]",
-    "rules": [
-        
-    ]
+    "rules": {
+        "prepend": ["[<noun>]", "[<adj>]", "[<num>]"],
+        "immediate prepend": [],
+        "append": ["[<pt_verb>]"],
+        "immediate append": [],
+        "part": "[<pt_noun>]"
+    }
 }

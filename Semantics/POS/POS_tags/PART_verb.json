@@ -1,0 +1,5 @@
+{
+    "name": "[<pt_verb>]",
+    "optional": ["[<aux>]", "[<adv>]"],
+    "required": ["[<verb>]"]
+}

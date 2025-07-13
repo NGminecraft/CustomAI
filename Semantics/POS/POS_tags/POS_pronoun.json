@@ -1,6 +1,9 @@
 {
     "name": "[<pron>]",
-    "rules": [
-        
-    ]
+    "rules": {
+        "prepend": [],
+        "immediate prepend": [],
+        "append": [],
+        "immediate append": []
+    }
 }

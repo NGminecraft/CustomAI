@@ -1,6 +1,10 @@
 {
     "name": "[<aux>]",
-    "rules": [
-        
-    ]
+    "rules": {
+        "prepend": ["[<pt_noun>]"],
+        "immediate prepend": ["[<gp_subject>]"],
+        "append": [],
+        "immediate append": [],
+        "part": "[<pt_verb>]"
+    }
 }

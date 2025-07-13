@@ -1,6 +1,10 @@
 {
     "name": "[<adj>]",
-    "rules": [
-        
-    ]
+    "rules": {
+        "prepend": ["[<gp_subject>]"],
+        "immediate prepend": [],
+        "append": ["[<det>]"],
+        "immediate append": [],
+        "part": "[<pt_noun>]"
+    }
 }

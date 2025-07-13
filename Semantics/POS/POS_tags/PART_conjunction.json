@@ -1,0 +1,5 @@
+{
+    "name": "[<pt_conj>]",
+    "optional": ["[<sconj>]", "[<cconj>]"],
+    "required": []
+}

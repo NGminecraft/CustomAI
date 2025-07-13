@@ -1,0 +1,4 @@
+{
+    "name": "[<gp_subject>]",
+    "contains": ["[<noun>]", "[<pron>]", "[<propn>]"]
+}

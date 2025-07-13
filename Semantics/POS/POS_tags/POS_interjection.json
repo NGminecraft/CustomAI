@@ -1,6 +1,9 @@
 {
     "name": "[<intj>]",
-    "rules": [
-        
-    ]
+    "rules": {
+        "prepend": [],
+        "immediate prepend": [],
+        "append": [],
+        "immediate append": []
+    }
 }

@@ -1,6 +1,10 @@
 {
     "name": "[<cconj>]",
-    "rules": [
-        
-    ]
+    "rules": {
+        "prepend": ["[<pt_noun>]", "[<pt_verb>]"],
+        "immediate prepend": [],
+        "append": ["[<pt_noun>]", "[<pt_verb>]"],
+        "immediate append": [],
+        "part": "[<pt_conj>]"
+    }
 }
