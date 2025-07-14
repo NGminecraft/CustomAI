@@ -1,9 +1,0 @@
-{
-    "name": "[<part>]",
-    "rules": {
-        "prepend": [],
-        "immediate prepend": [],
-        "append": [],
-        "immediate append": []
-    }
-}
