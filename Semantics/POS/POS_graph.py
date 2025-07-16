@@ -6,7 +6,7 @@ LOGGER = logging.getLogger(__name__)
 
 class POS_manager:
     def __init__(self):
-        self.tags: list[str]
+        self.tags: list[str] = []
         self._pos_tags: dict[str, POSGraph] = {}
         self._words: dict[str, Word|LockedWord] = {}
         self.initialized: bool = False
