@@ -1,0 +1,45 @@
+{
+    "tags": [
+        "start",
+        "[<NOUN>]",
+        "[<VERB>]",
+        "[<ADJ>]",
+        "[<ADV>]",
+        "[<INTJ>]",
+        "[<PROPN>]",
+        "[<ADP>]",
+        "[<AUX>]",
+        "[<CCON>]",
+        "[<DET>]",
+        "[<NUM>]",
+        "[<PART>]",
+        "[<PRON>]",
+        "[<SCON>]",
+        "[<PREP>]",
+        "[<PUNCT>]",
+        "end"
+    ],
+
+    "start": ["[<DET>]", "[<NOUN>]", "[<PRON>]", "[<ADJ>]", "[<NUM>]", "[<INTJ>]", "[<SCON>]", "[<CCON>]", "[<AUX>]", "[<VERB>]"],
+
+    "[<DET>]": ["[<ADJ>]", "[<NOUN>]", "[<NUM>]"],
+    "[<ADJ>]": ["[<ADJ>]", "[<NOUN>]"],
+    "[<NUM>]": ["[<NOUN>]", "[<ADJ>]"],
+    "[<NOUN>]": ["[<VERB>]", "[<AUX>]", "[<CCON>]", "[<PREP>]", "[<PUNCT>]"],
+    "[<PRON>]": ["[<VERB>]", "[<AUX>]", "[<ADV>]", "[<PUNCT>]"], 
+
+    "[<AUX>]": ["[<VERB>]", "[<ADV>]"],
+    "[<VERB>]": ["[<ADV>]", "[<DET>]", "[<PRON>]", "[<NOUN>]", "[<PREP>]", "[<PUNCT>]"],
+    "[<ADV>]": ["[<VERB>]", "[<ADJ>]", "[<ADV>]", "[<PUNCT>]"],
+
+    "[<PREP>]": ["[<DET>]", "[<NOUN>]", "[<PRON>]", "[<NUM>]", "[<ADJ>]"],
+
+    "[<CCON>]": ["[<PRON>]", "[<NOUN>]", "[<SCON>]", "[<ADJ>]", "[<VERB>]"],
+    "[<SCON>]": ["[<PRON>]", "[<NOUN>]", "[<DET>]", "[<ADJ>]", "[<NUM>]"],
+
+    "[<INTJ>]": ["[<PRON>]", "[<NOUN>]", "[<DET>]", "[<AUX>]", "[<VERB>]", "[<PUNCT>]"],
+
+    "[<PUNCT>]": ["end", "[<CCON>]", "[<SCON>]"],
+
+    "conjunctions": ["[<SCON>]", "[<CCON>]"]
+}

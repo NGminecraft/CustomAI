@@ -1,9 +1,0 @@
-{
-    "name": "[<noun>]",
-    "rules": {
-        "prepend": [],
-        "immediate prepend": [],
-        "append": [],
-        "immediate append": []
-    }
-}

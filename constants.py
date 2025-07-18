@@ -45,7 +45,7 @@ logging_config.dictConfig(LOGGING_CONFIG)
 
 """VOCABULARY CONSTANTS"""
 START_TOKEN = "[<SOS>]"
-END_TOKEN = "[<EOS>]"
+END_TOKEN = "[<EOS>]" # Remember to update pos_data.json
 
 WORD_RELATIONSHIP_WEIGHT = 0.1
 SAME_WORD_VALUE = 1
