@@ -1,5 +1,0 @@
-{
-    "name": "[<pt_noun>]",
-    "optional": ["[<det>]", "[<adj>]", "[<num>]"],
-    "required": ["[<gp_subject>]"]
-}

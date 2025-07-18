@@ -1,52 +1,65 @@
 import logging
 import os
 import json
+from Semantics.POS.POS_graph import POS_manager, POSGraph
 
 LOGGER = logging.getLogger(__name__)
+JSON_FILE = "POS_tags\\pos_data.json"
+
+def load_json():
+    path = os.path.join(os.path.dirname(__file__), JSON_FILE)
+    if not os.path.exists(path):
+        LOGGER.critical(f"JSON file '{JSON_FILE}' not found in {path}")
+        raise FileNotFoundError(f"JSON file '{JSON_FILE}' not found.")
+
+    with open(path, 'r') as file:
+        try:
+            return json.load(file)
+        except json.JSONDecodeError:
+            LOGGER.critical(f"Error decoding JSON from file '{JSON_FILE}'")
+            raise ValueError(f"Error decoding JSON from file '{JSON_FILE}'")
 
 
-
-            
 
 
 class POS:
     def __init__(self):
-        self.pos_tags = {}
-        self.group_tags = {}
-        self.part_tags = {}
-        self.known_tags = set()
-        self.known = {}
+        self.json_data = load_json()
+        self.POS = set()
+        self.POS_manager = POS_manager()
+        self.verify_json()
 
-        self.init_pos_tags()
-    
-    def init_pos_tags(self):
+    def verify_json(self):
+        from constants import START_TOKEN, END_TOKEN
+        assert "tags" in self.json_data
+        self.POS = set(self.json_data.get("tags"))
+        discovered_tags = set()
 
-        dir = os.path.join(os.path.dirname(__file__), 'POS_tags')
-        LOGGER.debug(f'Loading POS tags from {dir}')
+        for tag, connections in self.json_data.items():
+            match tag:
+                case "tags":
+                    continue
+                case additional if tag not in self.POS:
+                    pass
 
-        for file in os.listdir(dir):
-            if file.endswith('.json'): # Grabbing only jsons
-                with open(os.path.join(dir, file), 'r') as f:
-                    data = json.load(f)
-                    match file:
-                        case f if f.startswith('POS_'):
-                            self.pos_tags[data["name"]] = data["rules"]
-                            LOGGER.debug(f'Loading POS tag {data["name"]}')
-                        
-                        case f if f.startswith('PART_'):
-                            self.part_tags[data["name"]] = data
-                            LOGGER.debug(f"Loaded PART {data['name']}")
-                        
-                        case f if f.startswith('GROUP_'):
-                            self.group_tags[data["name"]] = data
-                            LOGGER.debug(f"Loaded GROUP {data['name']} (containing {data["contains"]})")
-                    
+                case a:
+                    if a == "start":
+                        a = START_TOKEN
+                        discovered_tags.add("start")
+                        self.POS.remove("start")
+                        self.POS.add(START_TOKEN)
+                    if "end" in connections:
+                        connections[connections.index("end")] = END_TOKEN 
+                    discovered_tags.add(a)
+                    self.POS_manager.add_tag(a, connections)
 
-        if len(self.pos_tags) == 0:
-            LOGGER.warning(f'No POS tags found in {dir}')
-            
-        LOGGER.info(f'Loaded {len(self.pos_tags)} POS tags, {len(self.group_tags)} group tags, and {len(self.part_tags)} part tags from {dir}')
+        self.POS_manager.add_tag(END_TOKEN, [])
 
-    def parse_sentence(self, sentence: list[str]):
-        if len(sentence) == 1 and sentence[0] not in self.known_tags:
-            :
+        for tag in self.POS - discovered_tags:
+            LOGGER.warning(f"POS tag '{tag}' not found in JSON data. It will not be managed by POS_manager.")
+
+        self.POS_manager.establish(END_TOKEN, START_TOKEN)
+        self.POS_manager.match_sentence(["[<SOS>]", "Hello", "!", "[<EOS>]"])
+
+def interactive():
+    pass

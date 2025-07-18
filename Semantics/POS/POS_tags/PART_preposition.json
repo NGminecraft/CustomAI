@@ -1,6 +1,0 @@
-{
-    "name": "[<pt_prop>]",
-    "optional": ["[<det>]"],
-    "required": ["[<adp>]", "[<gp_subject>]"]
-
-}
