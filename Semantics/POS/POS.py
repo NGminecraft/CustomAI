@@ -33,8 +33,6 @@ class POS:
         from constants import START_TOKEN, END_TOKEN
         assert "tags" in self.json_data
         self.POS = set(self.json_data.get("tags"))
-        self.POS.remove("start")
-        self.POS.add(START_TOKEN)
         discovered_tags = set()
 
         for tag, connections in self.json_data.items():
@@ -47,6 +45,9 @@ class POS:
                 case a:
                     if a == "start":
                         a = START_TOKEN
+                        discovered_tags.add("start")
+                        self.POS.remove("start")
+                        self.POS.add(START_TOKEN)
                     if "end" in connections:
                         connections[connections.index("end")] = END_TOKEN 
                     discovered_tags.add(a)
@@ -58,3 +59,7 @@ class POS:
             LOGGER.warning(f"POS tag '{tag}' not found in JSON data. It will not be managed by POS_manager.")
 
         self.POS_manager.establish(END_TOKEN, START_TOKEN)
+        self.POS_manager.match_sentence(["[<SOS>]", "Hello", "!", "[<EOS>]"])
+
+def interactive():
+    pass

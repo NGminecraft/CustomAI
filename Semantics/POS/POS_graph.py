@@ -1,5 +1,5 @@
 import logging
-from random import choice, choices
+from random import choices
 import heapq
 
 LOGGER = logging.getLogger(__name__)
@@ -79,7 +79,7 @@ class POS_manager:
         word_class_sentence: list[Word|LockedWord] = []
         locked_words: list[tuple[int, str]] = []
         # Get word classes for everything
-        for i, v in enumerate(sentence[1:-1]):
+        for i, v in enumerate(sentence):
             new_class = self.get_word_class(v)
             word_class_sentence.append(new_class)
     
@@ -90,35 +90,49 @@ class POS_manager:
         # Add the end token as a locked word
         locked_words.append((sentence_length - 1, self.end_token))
 
-        guessed_tokens = [self.start_token, ]
+        guessed_tokens = []
         probabilities = []
-        while len(guessed_tokens) < sentence_length:
-            current_tag = guessed_tokens[-1]
-            target_distance, target_token = locked_words.pop(0)
+        current_distance = 0
+        current_tag = sentence[0]
+        for path_distance, locked in locked_words:
 
             heap: list[tuple[int, tuple[str,...]]] = [(0, (current_tag, ))]
-            matches = []
+            matches: list[tuple[str,...]] = []
+            path_probabilities = []
+            # Modified djikstras
             while len(heap) > 0:
                 distance, path = heapq.heappop(heap)
-                if distance > target_distance:
+                if distance > path_distance:
                     # The smallest item in the heap was too large, so we can just exit
                     break
-                elif path[-1] == target_token and distance == target_distance:
+                elif path[-1] == locked and distance == path_distance:
                     # WE FOUND ONE!
                     matches.append(path)
+                    subsentence = word_class_sentence[current_distance:distance+1]
+                    assert len(path) == len(subsentence)
+                    path_probabilities.append(sum([v.get_probability(path[i]) for i, v in enumerate(subsentence)]) / len(path))
                 else:
                     self[path[-1]].djikstras(heap, path, distance, False)
+
             if len(matches) == 0:
                 LOGGER.error(f"The sentence '{sentence}' isn't parsing correctly")
                 return []
-            final_match = choice(matches)
+            if sum(path_probabilities) <= 0:
+                # Set the probability based on how many other valid matches could've worked
+                final_match: tuple[str,...] = choices(matches)[0]
+                probabilities.extend([1/len(matches)] * len(final_match))
+            else:
+                # Sum the probabilities each word has at being that token 
+                final_match: tuple[str,...] = choices(matches, path_probabilities)[0]
+                final_prob = path_probabilities[matches.index(final_match)]
+                probabilities.extend([final_prob / sum(probabilities) for _ in final_match])
             guessed_tokens.extend(final_match)
-            # Set the probability based on how many other valid matches couldv'e worked
-            probabilities.extend([1 / len(matches) for _ in final_match])
+            current_distance += len(final_match)
+            current_tag = guessed_tokens[-1]
 
         # Update the probability of all the words
-        for i, v in enumerate(word_class_sentence):
-            v.update_tag(guessed_tokens[i], (guessed_tokens[i-1], guessed_tokens[i+1]), probabilities[i])
+        for i, v in enumerate(word_class_sentence[1:-1]):
+            v.update_tag(guessed_tokens[i+1], (guessed_tokens[i], guessed_tokens[i+2]), probabilities[i+1])
 
         return guessed_tokens
             
@@ -186,7 +200,7 @@ class Word:
         self.tag_list = tag_list
         self.tag_probability: list[float] = [0 for _ in tag_list]
         self.locked = False
-        self.seen_connections: dict[str,dict[tuple[str, str],float]] = {}
+        self.seen_connections: dict[str,dict[tuple[str, str],float]] = {i: {} for i in tag_list}
         self.manager = manager
 
     def update_tag(self, tag: str, before_after: tuple[str, str], probability: float):
@@ -202,6 +216,8 @@ class Word:
         self.tag_probability[self.tag_list.index(tag)] = sum(tag_dict.values()) / self.manager[tag].unique_ways()
         #TODO: Promote words to a LockedWord if applicable
 
+    def get_probability(self, tag):
+        return self.tag_probability[self.tag_list.index(tag)]
 
     def query_type(self) -> str:
         return choices(self.tag_list, self.tag_probability)[0]
