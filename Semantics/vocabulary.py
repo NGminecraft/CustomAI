@@ -12,7 +12,6 @@ class Vocabulary:
         self.adjacency = torch.tensor([])
         self.vocab = {}
         self.words = set()
-        self.pos = POS()
 
     def add_word(self, word):
         LOGGER.debug(f"Adding word {word} to vocabulary")
