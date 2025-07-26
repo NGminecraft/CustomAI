@@ -66,7 +66,8 @@ def RELATIONSHIP_SCALING_FN(x):
 
 SECONDHAND_RELATIONSHIP_WEIGHT = 0.3
 
-STRING_SPLIT_REGEX = fr"\{START_TOKEN}|\{END_TOKEN}|\b[^\s\w]+|\b[^\s]+\b"
+# STRING_SPLIT_REGEX = fr"\{START_TOKEN}|\{END_TOKEN}|\b[^\s\w]+|\b[^\s]+\b"
+STRING_SPLIT_REGEX = r"\[\<\w+\>\](?=\s|$)|[^\w\s]\w*|\w+"
 def SENTENCE_SPLITTER(sentence):
     import re
     return re.findall(STRING_SPLIT_REGEX, sentence, flags=re.IGNORECASE)
