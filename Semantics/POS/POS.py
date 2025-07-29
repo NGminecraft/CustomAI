@@ -20,8 +20,6 @@ def load_json():
             raise ValueError(f"Error decoding JSON from file '{JSON_FILE}'")
 
 
-
-
 class POS:
     def __init__(self):
         self.json_data = load_json()
@@ -39,8 +37,9 @@ class POS:
             match tag:
                 case "tags":
                     continue
-                case additional if tag not in self.POS:
-                    pass
+                case "required":
+                    for i in connections:
+                        self.POS_manager.add_required_feature(set(i))
 
                 case a:
                     if a == "start":

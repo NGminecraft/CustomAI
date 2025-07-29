@@ -41,5 +41,10 @@
 
     "[<PUNCT>]": ["end", "[<CCON>]", "[<SCON>]"],
 
-    "conjunctions": ["[<SCON>]", "[<CCON>]"]
+    "conjunctions": ["[<SCON>]", "[<CCON>]"],
+
+    "required": [
+        ["[<NOUN>]", "[<PRON>]", "[PROPN>]"],
+        "[<VERB>]"
+    ]
 }
